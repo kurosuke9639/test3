@@ -29,24 +29,15 @@
         <fieldset>
           <legend>Q2. 出社する主な目的として、どちらが近いですか？</legend>
           <p class="note">※「出社の主な目的」に近いほうを選んでください。</p>
-          <label
-            ><input type="radio" name="q2" value="-2" />
-            雑談・気軽なコミュニケーションのため</label
-          >
+          <label><input type="radio" name="q2" value="-2" /> 雑談・気軽なコミュニケーションのため</label>
           <label><input type="radio" name="q2" value="-1" /> 雑談寄り</label>
           <label><input type="radio" name="q2" value="0" /> どちらとも言えない</label>
-          <label
-            ><input type="radio" name="q2" value="1" />
-            業務上の対面コミュニケーション</label
-          >
-          <label
-            ><input type="radio" name="q2" value="2" />
-            上司やメンバーから、対面で評価・フィードバックをもらうため</label
-          >
+          <label><input type="radio" name="q2" value="1" /> 業務上の対面コミュニケーション</label>
+          <label><input type="radio" name="q2" value="2" /> 上司やメンバーから、対面で評価・フィードバックをもらうため</label>
         </fieldset>
 
         <button type="submit" id="diagnosis-button">
-         あなたの働き方スタイル マッピング結果を見る
+          あなたの働き方スタイル マッピング結果を見る
         </button>
       </form>
     </section>
@@ -57,19 +48,15 @@
         <!-- マップエリア -->
         <div class="map-wrapper">
           <svg id="style-map" viewBox="0 0 200 200">
-            <!-- 背景 -->
             <rect x="0" y="0" width="200" height="200" class="map-bg" />
-            <!-- 軸 -->
             <line x1="0" y1="100" x2="200" y2="100" class="axis" />
             <line x1="100" y1="0" x2="100" y2="200" class="axis" />
 
-            <!-- 軸ラベル -->
             <text x="6" y="12" class="axis-label">業務対面・評価</text>
             <text x="6" y="195" class="axis-label">雑談・気軽な交流</text>
             <text x="6" y="110" class="axis-label">自宅集中</text>
             <text x="130" y="110" class="axis-label">オフィス集中</text>
 
-            <!-- ユーザーの点（位置はJSで更新） -->
             <circle id="user-point" cx="100" cy="100" r="4" class="user-point" />
           </svg>
         </div>
@@ -91,9 +78,10 @@
         その日の気分や環境によっても変わるため、「いまの自分の働き方を見直すきっかけ」としてご活用ください。
       </p>
     </section>
+
     <!-- ここからアンケート -->
     <section class="question-section">
-       <span class="multi-select-note"><h2>更に "あなたの理想の働き方" を知るための質問</h2></span>
+      <h2>更に "あなたの理想の働き方" を知るための質問</h2>
       <form id="survey-form">
         <!-- Q3 -->
         <fieldset>
@@ -117,7 +105,7 @@
 
         <!-- Q5 -->
         <fieldset>
-　        <legend>Q5. 出社することで得たいものを教えてください。<span class="multi-select-note">（複数選択）</span></legend>
+          <legend>Q5. 出社することで得たいものを教えてください。<span class="multi-select-note">（複数選択）</span></legend>
           <label><input type="checkbox" name="q5" value="雑談・気軽な交流"> 雑談・気軽な交流</label>
           <label><input type="checkbox" name="q5" value="チームの一体感"> チームの一体感</label>
           <label><input type="checkbox" name="q5" value="相談・議論のスピード感"> 相談・議論のスピード感</label>
@@ -159,40 +147,52 @@
           <textarea name="q9" class="large-textarea" rows="4" placeholder="回答を入力してください"></textarea>
         </fieldset>
 
-         <button type="button" onclick="summarizeResult()">結果をまとめる</button>
+        <button type="button" onclick="summarizeResult()">結果をまとめる</button>
       </form>
+
       <section id="summary-section" class="summary-section hidden">
         <h2>結果のまとめ</h2>
 
-        <!-- ❶ 四象限（SVG を再利用して表示） -->
-        <div class="map-wrapper">
-          <svg id="summary-style-map" viewBox="0 0 200 200">
-            <rect x="0" y="0" width="200" height="200" class="map-bg" />
-            <line x1="0" y1="100" x2="200" y2="100" class="axis" />
-            <line x1="100" y1="0" x2="100" y2="200" class="axis" />
+        <div class="result-layout">
+          <!-- 下の四象限マップ -->
+          <div class="map-wrapper">
+            <svg id="summary-style-map" viewBox="0 0 200 200">
+              <rect x="0" y="0" width="200" height="200" class="map-bg" />
+              <line x1="0" y1="100" x2="200" y2="100" class="axis" />
+              <line x1="100" y1="0" x2="100" y2="200" class="axis" />
 
-            <text x="6" y="12" class="axis-label">業務対面・評価</text>
-            <text x="6" y="195" class="axis-label">雑談・気軽な交流</text>
-            <text x="6" y="110" class="axis-label">自宅集中</text>
-            <text x="130" y="110" class="axis-label">オフィス集中</text>
+              <text x="6" y="12" class="axis-label">業務対面・評価</text>
+              <text x="6" y="195" class="axis-label">雑談・気軽な交流</text>
+              <text x="6" y="110" class="axis-label">自宅集中</text>
+              <text x="130" y="110" class="axis-label">オフィス集中</text>
 
-            <circle id="summary-user-point" cx="100" cy="100" r="4" class="user-point" />
-          </svg>
+              <circle id="summary-user-point" cx="100" cy="100" r="4" class="user-point" />
+            </svg>
+          </div>
+
+          <!-- 上と同じタイプ表示 -->
+          <div class="text-result">
+            <p class="coords">
+              あなたの座標：<span id="summary-coord-display">(x, y)</span>
+            </p>
+            <h3 id="summary-type-name"></h3>
+            <p id="summary-type-subtitle" class="type-subtitle"></p>
+            <p id="summary-type-description"></p>
+            <p id="summary-type-hints" class="type-hints"></p>
+          </div>
         </div>
 
-        <!-- ❷ 設問と回答の列挙 -->
         <h3>あなたの回答一覧</h3>
         <div id="answer-list" class="answer-list"></div>
 
-        <!-- ❹ メッセージ -->
         <p id="copy-message" class="copy-message hidden">
           生成AIで回答を分析するためのプロンプトと一緒にコピーしました。ご自身の生成AIで分析してみてくださいね！
         </p>
 
-        <!-- ❷＋❸＋❹ のコピー内容 -->
         <textarea id="copy-buffer" class="copy-buffer" readonly></textarea>
       </section>
-    <!-- アンケートここまで -->
+    </section>
+
     <footer>
       <small>&copy; 働き方スタイル診断</small>
     </footer>
