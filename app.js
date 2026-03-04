@@ -1,5 +1,6 @@
 // === 診断ロジック一式 ===
 
+// タイプ定義：象限ごとの文言
 const typeDefinitions = {
   A: {
     name: "対面ドリブン・オフィス型",
@@ -43,10 +44,11 @@ const typeDefinitions = {
   },
 };
 
-// DOM 読み込み後にセットアップ
+// DOM が全部読まれてから動かす
 document.addEventListener("DOMContentLoaded", () => {
   console.log("=== app.js loaded ===");
 
+  const diagnosisForm = document.getElementById("diagnosis-form");
   const diagnosisButton = document.getElementById("diagnosis-button");
   const surveyForm = document.getElementById("survey-form");
 
@@ -60,10 +62,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const typeHints = document.getElementById("type-hints");
   const userPoint = document.getElementById("user-point");
 
-  // 診断ボタン押下
+  if (!diagnosisForm || !diagnosisButton) {
+    console.error("診断フォームまたはボタンが見つかりません");
+    return;
+  }
+
+  // 上の診断マップ
   diagnosisButton.addEventListener("click", (event) => {
     event.preventDefault();
-    console.log("diagnosis button clicked");
 
     const q1Value = getRadioValue("q1");
     const q2Value = getRadioValue("q2");
@@ -90,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resultSection) resultSection.classList.remove("hidden");
   });
 
-  // summarizeResult をグローバルに公開
+  // 下の「結果をまとめる」用
   window.summarizeResult = function summarizeResult() {
     if (!surveyForm) {
       alert("アンケートフォームが見つかりません。");
@@ -111,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(surveyForm);
     const answers = {};
 
+    // Q1, Q2 は数値からラベルに変換
     answers.q1 = mapQ1Label(x);
     answers.q2 = mapQ2Label(y);
 
@@ -127,18 +134,16 @@ document.addEventListener("DOMContentLoaded", () => {
       if (v && v.trim() !== "") answers[name] = v.trim();
     });
 
-    // まとめ用の4象限も、上と同じロジックで点を打つ
+    // 下の四象限の点を、上と同じロジックでプロット
     renderSummaryQuadrant(x, y);
 
-    // QAリスト表示
+    // 回答一覧表示・コピー用テキスト生成
     renderAnswerList(answers);
 
-    // コピー用テキスト
     const copyText = buildCopyText(answers);
     const copyBuffer = document.getElementById("copy-buffer");
     if (copyBuffer) copyBuffer.value = copyText;
 
-    // クリップボードコピー
     navigator.clipboard
       .writeText(copyText)
       .then(() => {
@@ -164,7 +169,7 @@ function getRadioValue(name) {
   return null;
 }
 
-// タイプ判定
+// タイプ判定：境界型を優先
 function judgeType(x, y) {
   if (x === 0 || y === 0) return "boundary";
   if (x > 0 && y > 0) return "A";
@@ -174,7 +179,7 @@ function judgeType(x, y) {
   return "boundary";
 }
 
-// SVG上の座標変換（共通）
+// SVG 上の座標変換（上と下で共通）
 function plotPoint(pointElement, x, y) {
   const minVal = -2;
   const maxVal = 2;
@@ -182,7 +187,7 @@ function plotPoint(pointElement, x, y) {
   const svgMax = 200;
 
   const cx = mapRange(x, minVal, maxVal, svgMin, svgMax);
-  const cy = mapRange(-y, minVal, maxVal, svgMin, svgMax);
+  const cy = mapRange(-y, minVal, maxVal, svgMin, svgMax); // y は上下反転
 
   pointElement.setAttribute("cx", cx);
   pointElement.setAttribute("cy", cy);
@@ -192,7 +197,7 @@ function mapRange(value, inMin, inMax, outMin, outMax) {
   return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
 
-// Q1, Q2 ラベル化
+// Q1 ラベル
 function mapQ1Label(x) {
   switch (x) {
     case -2:
@@ -210,6 +215,7 @@ function mapQ1Label(x) {
   }
 }
 
+// Q2 ラベル
 function mapQ2Label(y) {
   switch (y) {
     case -2:
@@ -227,14 +233,14 @@ function mapQ2Label(y) {
   }
 }
 
-// まとめ用4象限：点だけ上と同じロジックで描画
+// 下のサマリーマップの点だけ更新（SVG は index.html のまま）
 function renderSummaryQuadrant(x, y) {
   const point = document.getElementById("summary-user-point");
   if (!point) return;
   plotPoint(point, x, y);
 }
 
-// Q&A一覧表示
+// 回答一覧を画面に出す
 function renderAnswerList(answers) {
   const answerList = document.getElementById("answer-list");
   if (!answerList) return;
@@ -267,7 +273,7 @@ function renderAnswerList(answers) {
   });
 }
 
-// コピー用テキスト
+// 生成AIに投げる用テキスト
 function buildCopyText(answers) {
   const questionText = {
     q1: "Q1. 仕事に最も集中しやすい場所はどちらですか？",
@@ -293,8 +299,8 @@ function buildCopyText(answers) {
       lines.push(`${label} ${answers[key]}`);
     }
   });
-  lines.push("");
 
+  lines.push("");
   lines.push(
     "これらは回答者の働き方のスタイルに関する回答結果である。これらの質問・回答を踏まえて、回答者はどんな働き方をしていったらよいかアドバイスがほしい。"
   );
