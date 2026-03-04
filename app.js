@@ -47,7 +47,6 @@ const typeDefinitions = {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("=== app.js loaded ===");
 
-  const diagnosisForm = document.getElementById("diagnosis-form");
   const diagnosisButton = document.getElementById("diagnosis-button");
   const surveyForm = document.getElementById("survey-form");
 
@@ -60,11 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const typeDescription = document.getElementById("type-description");
   const typeHints = document.getElementById("type-hints");
   const userPoint = document.getElementById("user-point");
-
-  if (!diagnosisForm || !diagnosisButton) {
-    console.error("診断フォームまたはボタンが見つかりません");
-    return;
-  }
 
   // 診断ボタン押下
   diagnosisButton.addEventListener("click", (event) => {
@@ -96,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resultSection) resultSection.classList.remove("hidden");
   });
 
-  // summarizeResult をグローバルに公開（HTML の onclick から呼ぶ）
+  // summarizeResult をグローバルに公開
   window.summarizeResult = function summarizeResult() {
     if (!surveyForm) {
       alert("アンケートフォームが見つかりません。");
@@ -133,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (v && v.trim() !== "") answers[name] = v.trim();
     });
 
-    // まとめ用の4象限も「上と同じロジック」で点を打つ
+    // まとめ用の4象限も、上と同じロジックで点を打つ
     renderSummaryQuadrant(x, y);
 
     // QAリスト表示
@@ -180,7 +174,7 @@ function judgeType(x, y) {
   return "boundary";
 }
 
-// SVG 上の座標変換（共通）
+// SVG上の座標変換（共通）
 function plotPoint(pointElement, x, y) {
   const minVal = -2;
   const maxVal = 2;
@@ -233,7 +227,7 @@ function mapQ2Label(y) {
   }
 }
 
-// まとめ用4象限：上と同じロジックで描画
+// まとめ用4象限：点だけ上と同じロジックで描画
 function renderSummaryQuadrant(x, y) {
   const point = document.getElementById("summary-user-point");
   if (!point) return;
