@@ -42,7 +42,6 @@ const typeDefinitions = {
   },
 };
 
-// ===== 初期化 =====
 document.addEventListener("DOMContentLoaded", () => {
   const diagnosisForm = document.getElementById("diagnosis-form");
   const diagnosisButton = document.getElementById("diagnosis-button");
@@ -58,11 +57,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const typeHints = document.getElementById("type-hints");
   const userPoint = document.getElementById("user-point");
 
+  const summaryCoordDisplay = document.getElementById("summary-coord-display");
+  const summaryTypeName = document.getElementById("summary-type-name");
+  const summaryTypeSubtitle = document.getElementById("summary-type-subtitle");
+  const summaryTypeDescription = document.getElementById("summary-type-description");
+  const summaryTypeHints = document.getElementById("summary-type-hints");
+
   if (!diagnosisForm || !diagnosisButton) return;
 
-  // 上のマップの診断
-  diagnosisButton.addEventListener("click", (e) => {
-    e.preventDefault();
+  // 上の診断ボタン
+  diagnosisButton.addEventListener("click", (event) => {
+    event.preventDefault();
 
     const q1Value = getRadioValue("q1");
     const q2Value = getRadioValue("q2");
@@ -85,11 +90,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeDescription) typeDescription.textContent = typeInfo.description;
     if (typeHints) typeHints.textContent = typeInfo.hints;
 
-    if (userPoint) plotPoint(userPoint, x, y); // 上の circle
+    if (userPoint) plotPoint(userPoint, x, y);
+
     if (resultSection) resultSection.classList.remove("hidden");
   });
 
-  // 下の「結果をまとめる」ボタンから呼ばれる関数を公開
+  // 下のまとめボタン
   window.summarizeResult = function summarizeResult() {
     if (!surveyForm) {
       alert("アンケートフォームが見つかりません。");
@@ -126,11 +132,21 @@ document.addEventListener("DOMContentLoaded", () => {
       if (v && v.trim() !== "") answers[name] = v.trim();
     });
 
-    // ★ 下の四象限の点を、上と同じロジックで配置
+    // 座標・タイプを下にも反映（上と同じもの）
+    const typeKey = judgeType(x, y);
+    const typeInfo = typeDefinitions[typeKey];
+
+    if (summaryCoordDisplay) summaryCoordDisplay.textContent = `(${x}, ${y})`;
+    if (summaryTypeName) summaryTypeName.textContent = typeInfo.name;
+    if (summaryTypeSubtitle) summaryTypeSubtitle.textContent = typeInfo.subtitle;
+    if (summaryTypeDescription) summaryTypeDescription.textContent = typeInfo.description;
+    if (summaryTypeHints) summaryTypeHints.textContent = typeInfo.hints;
+
+    // 下の四象限の点も同じロジックでプロット
     renderSummaryQuadrant(x, y);
 
-    // 回答一覧 ＋ コピー用テキスト
     renderAnswerList(answers);
+
     const copyText = buildCopyText(answers);
     const copyBuffer = document.getElementById("copy-buffer");
     if (copyBuffer) copyBuffer.value = copyText;
@@ -150,11 +166,11 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 });
 
-// ===== 共通 =====
+// 共通
 function getRadioValue(name) {
   const nodes = document.querySelectorAll(`input[name="${name}"]`);
-  for (const n of nodes) {
-    if (n.checked) return n.value;
+  for (const node of nodes) {
+    if (node.checked) return node.value;
   }
   return null;
 }
@@ -168,7 +184,7 @@ function judgeType(x, y) {
   return "boundary";
 }
 
-// 上と下で共通の座標変換
+// SVG 座標変換（上と下で共通）
 function plotPoint(pointElement, x, y) {
   const minVal = -2;
   const maxVal = 2;
@@ -176,14 +192,14 @@ function plotPoint(pointElement, x, y) {
   const svgMax = 200;
 
   const cx = mapRange(x, minVal, maxVal, svgMin, svgMax);
-  const cy = mapRange(-y, minVal, maxVal, svgMin, svgMax); // 上下反転
+  const cy = mapRange(-y, minVal, maxVal, svgMin, svgMax);
 
   pointElement.setAttribute("cx", cx);
   pointElement.setAttribute("cy", cy);
 }
 
-function mapRange(v, inMin, inMax, outMin, outMax) {
-  return ((v - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+function mapRange(value, inMin, inMax, outMin, outMax) {
+  return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
 
 // Q1/Q2 ラベル
@@ -221,11 +237,10 @@ function mapQ2Label(y) {
   }
 }
 
-// ===== 下の四象限だけ弄るところ =====
+// 下マップの点
 function renderSummaryQuadrant(x, y) {
   const point = document.getElementById("summary-user-point");
   if (!point) return;
-  // 上と同じ plotPoint をそのまま使う
   plotPoint(point, x, y);
 }
 
