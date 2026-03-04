@@ -2,142 +2,200 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>働き方スタイル診断</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>働き方スタイル診断（四象限マップ）</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main>
+  <main class="container">
     <h1>働き方スタイル診断</h1>
+    <p class="lead">
+      まず初めに、2つの質問に答えると、あなたの働き方スタイルが四象限マップにプロットされます。<br>
+      深く考えすぎず、「いまの自分にいちばん近いもの」を選んでください。
+    </p>
 
-    <!-- 診断フォーム -->
-    <form id="diagnosis-form">
-      <section>
-        <h2>Q1. 仕事に最も集中しやすい場所はどちらですか？</h2>
-        <label><input type="radio" name="q1" value="-2"> 圧倒的に自宅で集中しやすい</label><br>
-        <label><input type="radio" name="q1" value="-1"> やや自宅で集中しやすい</label><br>
-        <label><input type="radio" name="q1" value="0"> 自宅・オフィスどちらとも言えない</label><br>
-        <label><input type="radio" name="q1" value="1"> ややオフィスで集中しやすい</label><br>
-        <label><input type="radio" name="q1" value="2"> 圧倒的にオフィスで集中しやすい</label>
-      </section>
+    <section class="question-section">
+      <form id="diagnosis-form">
+        <!-- Q1 -->
+        <fieldset>
+          <legend>Q1. 仕事に最も集中しやすい場所はどちらですか？</legend>
+          <label><input type="radio" name="q1" value="-2" /> 圧倒的に自宅</label>
+          <label><input type="radio" name="q1" value="-1" /> やや自宅</label>
+          <label><input type="radio" name="q1" value="0" /> どちらとも言えない</label>
+          <label><input type="radio" name="q1" value="1" /> ややオフィス</label>
+          <label><input type="radio" name="q1" value="2" /> 圧倒的にオフィス</label>
+        </fieldset>
 
-      <section>
-        <h2>Q2. 出社する主な目的として、どちらが近いですか？</h2>
-        <label><input type="radio" name="q2" value="-2"> 雑談・気軽なコミュニケーション目的の出社が近い</label><br>
-        <label><input type="radio" name="q2" value="-1"> どちらかといえば雑談寄りの目的</label><br>
-        <label><input type="radio" name="q2" value="0"> 雑談と業務対面のどちらとも言えない</label><br>
-        <label><input type="radio" name="q2" value="1"> どちらかといえば業務上の対面コミュニケーション目的</label><br>
-        <label><input type="radio" name="q2" value="2"> 対面での評価・フィードバック目的の出社が近い</label>
-      </section>
+        <!-- Q2 -->
+        <fieldset>
+          <legend>Q2. 出社する主な目的として、どちらが近いですか？</legend>
+          <p class="note">※「出社の主な目的」に近いほうを選んでください。</p>
+          <label
+            ><input type="radio" name="q2" value="-2" />
+            雑談・気軽なコミュニケーションのため</label
+          >
+          <label><input type="radio" name="q2" value="-1" /> 雑談寄り</label>
+          <label><input type="radio" name="q2" value="0" /> どちらとも言えない</label>
+          <label
+            ><input type="radio" name="q2" value="1" />
+            業務上の対面コミュニケーション</label
+          >
+          <label
+            ><input type="radio" name="q2" value="2" />
+            上司やメンバーから、対面で評価・フィードバックをもらうため</label
+          >
+        </fieldset>
 
-      <button type="button" id="diagnosis-button">
-        あなたの働き方スタイル マッピング結果を見る
-      </button>
-    </form>
-
-    <!-- 結果表示エリア -->
-    <section id="result-section" class="hidden">
-      <h2>あなたのマッピング結果</h2>
-
-      <p>あなたの座標：<span id="coord-display"></span></p>
-
-      <!-- 上の結果マップ -->
-      <svg id="result-map" viewBox="0 0 200 200" width="300" height="300">
-        <line x1="0" y1="100" x2="200" y2="100" stroke="#333" stroke-width="1" />
-        <line x1="100" y1="0" x2="100" y2="200" stroke="#333" stroke-width="1" />
-        <text x="5" y="15" font-size="10">自宅集中</text>
-        <text x="140" y="15" font-size="10">オフィス集中</text>
-        <text x="5" y="195" font-size="10">雑談・気軽なコミュニケーション</text>
-        <text x="90" y="195" font-size="10">業務上の対面/評価・フィードバック</text>
-        <circle id="user-point" cx="100" cy="100" r="4" fill="red" />
-      </svg>
-
-      <h3 id="type-name"></h3>
-      <p id="type-subtitle"></p>
-      <p id="type-description"></p>
-      <p id="type-hints"></p>
+        <button type="submit" id="diagnosis-button">
+         あなたの働き方スタイル マッピング結果を見る
+        </button>
+      </form>
     </section>
 
-    <!-- アンケートフォーム -->
-    <form id="survey-form">
-      <section>
-        <h2>Q3. 自宅またはオフィスでの集中を妨げる要因について教えてください。</h2>
-        <textarea name="q3" rows="3"></textarea>
-      </section>
+    <section id="result-section" class="result-section hidden">
+      <h2>診断結果</h2>
+      <div class="result-layout">
+        <!-- マップエリア -->
+        <div class="map-wrapper">
+          <svg id="style-map" viewBox="0 0 200 200">
+            <!-- 背景 -->
+            <rect x="0" y="0" width="200" height="200" class="map-bg" />
+            <!-- 軸 -->
+            <line x1="0" y1="100" x2="200" y2="100" class="axis" />
+            <line x1="100" y1="0" x2="100" y2="200" class="axis" />
 
-      <section>
-        <h2>Q4. 「集中が必要な業務」を行う際、最適だと思う場所を教えてください。</h2>
-        <textarea name="q4" rows="3"></textarea>
-      </section>
+            <!-- 軸ラベル -->
+            <text x="6" y="12" class="axis-label">業務対面・評価</text>
+            <text x="6" y="195" class="axis-label">雑談・気軽な交流</text>
+            <text x="6" y="110" class="axis-label">自宅集中</text>
+            <text x="130" y="110" class="axis-label">オフィス集中</text>
 
-      <section>
-        <h2>Q5. 出社することで得たいものを教えてください。（複数選択可）</h2>
-        <label><input type="checkbox" name="q5" value="雑談・気分転換"> 雑談・気分転換</label><br>
-        <label><input type="checkbox" name="q5" value="チームの一体感"> チームの一体感</label><br>
-        <label><input type="checkbox" name="q5" value="上司や同僚との対面コミュニケーション"> 上司や同僚との対面コミュニケーション</label><br>
-        <label><input type="checkbox" name="q5" value="対面での評価・フィードバック"> 対面での評価・フィードバック</label><br>
-        <label><input type="checkbox" name="q5" value="その他"> その他</label>
-      </section>
+            <!-- ユーザーの点（位置はJSで更新） -->
+            <circle id="user-point" cx="100" cy="100" r="4" class="user-point" />
+          </svg>
+        </div>
 
-      <section>
-        <h2>Q6. 雑談や偶発的なコミュニケーションをどの程度重視しますか？</h2>
-        <select name="q6">
-          <option value="">選択してください</option>
-          <option value="とても重視する">とても重視する</option>
-          <option value="やや重視する">やや重視する</option>
-          <option value="どちらとも言えない">どちらとも言えない</option>
-          <option value="あまり重視しない">あまり重視しない</option>
-          <option value="まったく重視しない">まったく重視しない</option>
-        </select>
-      </section>
+        <!-- テキスト結果エリア -->
+        <div class="text-result">
+          <p class="coords">
+            あなたの座標：<span id="coord-display">(x, y)</span>
+          </p>
+          <h3 id="type-name">タイプ名が入ります</h3>
+          <p id="type-subtitle" class="type-subtitle"></p>
+          <p id="type-description"></p>
+          <p id="type-hints" class="type-hints"></p>
+        </div>
+      </div>
 
-      <section>
-        <h2>Q7. 対面での評価やフィードバックをどの程度重要だと感じますか？</h2>
-        <select name="q7">
-          <option value="">選択してください</option>
-          <option value="とても重要">とても重要</option>
-          <option value="やや重要">やや重要</option>
-          <option value="どちらとも言えない">どちらとも言えない</option>
-          <option value="あまり重要ではない">あまり重要ではない</option>
-          <option value="まったく重要ではない">まったく重要ではない</option>
-        </select>
-      </section>
-
-      <section>
-        <h2>Q8. 理想的な勤務スタイル（出社と在宅の割合）についてご意見があれば教えてください。</h2>
-        <textarea name="q8" rows="3"></textarea>
-      </section>
-
-      <section>
-        <h2>Q9. 出社やリモートワークの運用に関して、ご希望や改善点があれば自由にお書きください。</h2>
-        <textarea name="q9" rows="3"></textarea>
-      </section>
-
-      <button type="button" onclick="summarizeResult()">
-        回答結果をまとめ＋コピー用テキスト生成
-      </button>
-    </form>
-
-    <!-- 結果まとめ表示 -->
-    <section id="summary-section" class="hidden">
-      <h2>回答結果のまとめ</h2>
-
-      <!-- 下のまとめ用マップ（見た目はこのまま） -->
-      <svg id="summary-map" viewBox="0 0 200 200" width="300" height="300">
-        <line x1="0" y1="100" x2="200" y2="100" stroke="#333" stroke-width="1" />
-        <line x1="100" y1="0" x2="100" y2="200" stroke="#333" stroke-width="1" />
-        <text x="5" y="15" font-size="10">自宅集中</text>
-        <text x="140" y="15" font-size="10">オフィス集中</text>
-        <text x="5" y="195" font-size="10">雑談・気軽なコミュニケーション</text>
-        <text x="90" y="195" font-size="10">業務上の対面/評価・フィードバック</text>
-        <circle id="summary-user-point" cx="100" cy="100" r="4" fill="red" />
-      </svg>
-
-      <div id="answer-list"></div>
-
-      <h3>生成AIに投げる用テキスト</h3>
-      <textarea id="copy-buffer" rows="10" style="width:100%;"></textarea>
-      <p id="copy-message" class="hidden">コピーしました。生成AIに貼り付けて使ってください。</p>
+      <p class="caution">
+        ※この診断は、あくまで傾向をざっくり可視化するものです。<br>
+        その日の気分や環境によっても変わるため、「いまの自分の働き方を見直すきっかけ」としてご活用ください。
+      </p>
     </section>
+    <!-- ここからアンケート -->
+    <section class="question-section">
+       <span class="multi-select-note"><h2>更に "あなたの理想の働き方" を知るための質問</h2></span>
+      <form id="survey-form">
+        <!-- Q3 -->
+        <fieldset>
+          <legend>Q3. 自宅またはオフィスでの集中を妨げる要因について教えてください。（単一選択）</legend>
+          <label><input type="radio" name="q3" value="自宅のほうが雑音や家事で集中しにくい"> 自宅のほうが雑音や家事で集中しにくい</label>
+          <label><input type="radio" name="q3" value="オフィスのほうが雑音や会話が多く集中しにくい"> オフィスのほうが雑音や会話が多く集中しにくい</label>
+          <label><input type="radio" name="q3" value="双方同程度"> 双方同程度</label>
+          <label><input type="radio" name="q3" value="特に感じていない"> 特に感じていない</label>
+          <label><input type="radio" name="q3" value="その他"> その他</label>
+        </fieldset>
+
+        <!-- Q4 -->
+        <fieldset>
+          <legend>Q4. 「集中が必要な業務」を行う際、最適だと思う場所を教えてください。（単一選択）</legend>
+          <label><input type="radio" name="q4" value="主に自宅"> 主に自宅</label>
+          <label><input type="radio" name="q4" value="どちらかというと自宅"> どちらかというと自宅</label>
+          <label><input type="radio" name="q4" value="どちらでもよい"> どちらでもよい</label>
+          <label><input type="radio" name="q4" value="どちらかというとオフィス"> どちらかというとオフィス</label>
+          <label><input type="radio" name="q4" value="主にオフィス"> 主にオフィス</label>
+        </fieldset>
+
+        <!-- Q5 -->
+        <fieldset>
+　        <legend>Q5. 出社することで得たいものを教えてください。<span class="multi-select-note">（複数選択）</span></legend>
+          <label><input type="checkbox" name="q5" value="雑談・気軽な交流"> 雑談・気軽な交流</label>
+          <label><input type="checkbox" name="q5" value="チームの一体感"> チームの一体感</label>
+          <label><input type="checkbox" name="q5" value="相談・議論のスピード感"> 相談・議論のスピード感</label>
+          <label><input type="checkbox" name="q5" value="上司や同僚と直接話すことでの納得感"> 上司や同僚と直接話すことでの納得感</label>
+          <label><input type="checkbox" name="q5" value="フィードバックや評価を対面で受けられる"> フィードバックや評価を対面で受けられる</label>
+          <label><input type="checkbox" name="q5" value="気分転換"> 気分転換</label>
+          <label><input type="checkbox" name="q5" value="特にない"> 特にない</label>
+        </fieldset>
+
+        <!-- Q6 -->
+        <fieldset>
+          <legend>Q6. 雑談や偶発的なコミュニケーションをどの程度重視しますか？（単一選択）</legend>
+          <label><input type="radio" name="q6" value="全く重視しない"> 全く重視しない</label>
+          <label><input type="radio" name="q6" value="どちらかというと重視しない"> どちらかというと重視しない</label>
+          <label><input type="radio" name="q6" value="どちらともいえない"> どちらともいえない</label>
+          <label><input type="radio" name="q6" value="どちらかというと重視する"> どちらかというと重視する</label>
+          <label><input type="radio" name="q6" value="とても重視する"> とても重視する</label>
+        </fieldset>
+
+        <!-- Q7 -->
+        <fieldset>
+          <legend>Q7. 対面での評価やフィードバックをどの程度重要だと感じますか？（単一選択）</legend>
+          <label><input type="radio" name="q7" value="重要と感じない"> 重要と感じない</label>
+          <label><input type="radio" name="q7" value="どちらかといえば重要とは感じない"> どちらかといえば重要とは感じない</label>
+          <label><input type="radio" name="q7" value="どちらともいえない"> どちらともいえない</label>
+          <label><input type="radio" name="q7" value="どちらかといえば重要だと感じる"> どちらかといえば重要だと感じる</label>
+          <label><input type="radio" name="q7" value="非常に重要だと感じる"> 非常に重要だと感じる</label>
+        </fieldset>
+
+        <!-- Q8 -->
+        <fieldset>
+          <legend>Q8. 理想的な勤務スタイル（出社と在宅の割合）についてご意見があれば教えてください。（自由記述）</legend>
+          <textarea name="q8" class="large-textarea" rows="4" placeholder="回答を入力してください"></textarea>
+        </fieldset>
+
+        <!-- Q9 -->
+        <fieldset>
+          <legend>Q9. 出社やリモートワークの運用に関して、ご希望や改善点があれば自由にお書きください。（自由記述）</legend>
+          <textarea name="q9" class="large-textarea" rows="4" placeholder="回答を入力してください"></textarea>
+        </fieldset>
+
+         <button type="button" onclick="summarizeResult()">結果をまとめる</button>
+      </form>
+      <section id="summary-section" class="summary-section hidden">
+        <h2>結果のまとめ</h2>
+
+        <!-- ❶ 四象限（SVG を再利用して表示） -->
+        <div class="map-wrapper">
+          <svg id="summary-style-map" viewBox="0 0 200 200">
+            <rect x="0" y="0" width="200" height="200" class="map-bg" />
+            <line x1="0" y1="100" x2="200" y2="100" class="axis" />
+            <line x1="100" y1="0" x2="100" y2="200" class="axis" />
+
+            <text x="6" y="12" class="axis-label">業務対面・評価</text>
+            <text x="6" y="195" class="axis-label">雑談・気軽な交流</text>
+            <text x="6" y="110" class="axis-label">自宅集中</text>
+            <text x="130" y="110" class="axis-label">オフィス集中</text>
+
+            <circle id="summary-user-point" cx="100" cy="100" r="4" class="user-point" />
+          </svg>
+        </div>
+
+        <!-- ❷ 設問と回答の列挙 -->
+        <h3>あなたの回答一覧</h3>
+        <div id="answer-list" class="answer-list"></div>
+
+        <!-- ❹ メッセージ -->
+        <p id="copy-message" class="copy-message hidden">
+          生成AIで回答を分析するためのプロンプトと一緒にコピーしました。ご自身の生成AIで分析してみてくださいね！
+        </p>
+
+        <!-- ❷＋❸＋❹ のコピー内容 -->
+        <textarea id="copy-buffer" class="copy-buffer" readonly></textarea>
+      </section>
+    <!-- アンケートここまで -->
+    <footer>
+      <small>&copy; 働き方スタイル診断</small>
+    </footer>
   </main>
 
   <script src="app.js"></script>
