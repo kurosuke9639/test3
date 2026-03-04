@@ -1,141 +1,371 @@
-/* ベース */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 body {
-  margin: 0;
-  padding: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+  margin: 0;
+  padding: 0;
   line-height: 1.6;
   color: #222;
-  background: #f7f7f9;
+  background: #f5f5f7;
 }
 
-main {
-  max-width: 900px;
+.container {
+  max-width: 960px;
   margin: 0 auto;
   padding: 24px 16px 40px;
   background: #fff;
 }
 
-/* 見出し */
 h1 {
   margin-top: 0;
-  margin-bottom: 24px;
   font-size: 1.8rem;
-  text-align: center;
 }
 
 h2 {
-  margin: 32px 0 12px;
-  font-size: 1.2rem;
-  border-left: 4px solid #4b8df8;
-  padding-left: 8px;
+  font-size: 1.4rem;
+  margin-top: 32px;
 }
 
 h3 {
-  margin: 20px 0 8px;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  margin-top: 0;
 }
 
-/* フォーム */
-form section {
+.lead {
+  margin-bottom: 24px;
+}
+
+.question-section fieldset {
+  border: 1px solid #ddd;
+  padding: 16px;
   margin-bottom: 16px;
-  padding: 12px 12px 8px;
-  border-radius: 6px;
-  background: #fafafa;
-  border: 1px solid #e3e3e3;
+}
+
+legend {
+  font-weight: bold;
 }
 
 label {
   display: block;
-  margin-bottom: 6px;
-  cursor: pointer;
+  margin: 4px 0;
 }
 
-textarea,
-select {
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-family: inherit;
-  font-size: 0.95rem;
-  resize: vertical;
+.note {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 4px;
 }
 
-/* ボタン */
-button {
+button#submit-button {
   display: inline-block;
-  margin: 16px 0;
-  padding: 10px 18px;
+  margin-top: 8px;
+  padding: 8px 20px;
   border: none;
-  border-radius: 999px;
-  background: #4b8df8;
+  border-radius: 4px;
+  background: #0070f3;
   color: #fff;
-  font-size: 0.95rem;
+  font-size: 1rem;
   cursor: pointer;
 }
 
-button:hover {
-  background: #3a74d0;
+button#submit-button:hover {
+  background: #0059c9;
 }
 
-/* 結果・まとめ */
 .hidden {
   display: none;
 }
 
+.result-section {
+  margin-top: 32px;
+}
+
+.result-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
 .map-wrapper {
-  margin: 8px 0 16px;
-  text-align: center;
+  flex: 0 0 260px;
 }
 
-.map-svg {
-  max-width: 100%;
-  height: auto;
-  border: 1px solid #ddd;
-  background: #fff;
+#style-map {
+  width: 240px;
+  height: 240px;
+  border: 1px solid #ccc;
+  background: #fafafa;
 }
 
-.type-block {
-  padding: 8px 0 0;
+.map-bg {
+  fill: #fafafa;
+}
+
+.axis {
+  stroke: #999;
+  stroke-width: 1;
+}
+
+.axis-label {
+  font-size: 8px;
+  fill: #555;
+}
+
+.user-point {
+  fill: #e63946;
+}
+
+.text-result {
+  flex: 1;
+  min-width: 240px;
+}
+
+.coords {
+  font-size: 0.9rem;
+  color: #555;
 }
 
 .type-subtitle {
-  font-weight: 600;
+  font-weight: bold;
   color: #555;
 }
 
 .type-hints {
-  margin-top: 8px;
-  padding: 8px;
-  border-left: 3px solid #4b8df8;
-  background: #f4f7ff;
-}
-
-/* 回答リスト */
-.answer-list p {
-  margin: 4px 0 8px;
-  font-size: 0.95rem;
-}
-
-/* コピー用テキストエリア */
-#copy-buffer {
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-family: inherit;
   font-size: 0.9rem;
+  color: #444;
 }
 
-#copy-message {
-  margin-top: 6px;
+.caution {
   font-size: 0.85rem;
-  color: #2f7d32;
+  color: #666;
+  margin-top: 24px;
+  border-top: 1px dashed #ddd;
+  padding-top: 12px;
+}
+
+footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* スマホ向けレイアウト調整 */
+@media (max-width: 640px) {
+  .result-layout {
+    flex-direction: column;
+  }
+
+  .map-wrapper {
+    flex: 1 1 auto;
+  }
+
+  #style-map {
+    width: 100%;
+    height: auto;
+  }
+}
+.multi-select-note {
+  color: red;
+}
+.large-textarea {
+  width: 100%;
+  min-height: 120px; /* 好きな高さに調整可 */
+}
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  color: #222;
+  background: #f5f5f7;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+  background: #fff;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 1.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+  margin-top: 32px;
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-top: 0;
+}
+
+.lead {
+  margin-bottom: 24px;
+}
+
+.question-section fieldset {
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+legend {
+  font-weight: bold;
+}
+
+label {
+  display: block;
+  margin: 4px 0;
+}
+
+.note {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+button#submit-button {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  background: #0070f3;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button#submit-button:hover {
+  background: #0059c9;
+}
+
+.hidden {
+  display: none;
+}
+
+.result-section {
+  margin-top: 32px;
+}
+
+.result-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.map-wrapper {
+  flex: 0 0 260px;
+}
+
+#style-map {
+  width: 240px;
+  height: 240px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+}
+
+.map-bg {
+  fill: #fafafa;
+}
+
+.axis {
+  stroke: #999;
+  stroke-width: 1;
+}
+
+.axis-label {
+  font-size: 8px;
+  fill: #555;
+}
+
+.user-point {
+  fill: #e63946;
+}
+
+.text-result {
+  flex: 1;
+  min-width: 240px;
+}
+
+.coords {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.type-subtitle {
+  font-weight: bold;
+  color: #555;
+}
+
+.type-hints {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.caution {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 24px;
+  border-top: 1px dashed #ddd;
+  padding-top: 12px;
+}
+
+footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* スマホ向けレイアウト調整 */
+@media (max-width: 640px) {
+  .result-layout {
+    flex-direction: column;
+  }
+
+  .map-wrapper {
+    flex: 1 1 auto;
+  }
+
+  #style-map {
+    width: 100%;
+    height: auto;
+  }
+}
+.multi-select-note {
+  color: red;
+}
+.large-textarea {
+  width: 100%;
+  min-height: 120px; /* 好きな高さに調整可 */
+}
+.summary-section {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 2px solid #333;
+}
+
+.answer-list p {
+  margin: 4px 0;
+}
+
+.copy-buffer {
+  width: 100%;
+  min-height: 160px;
+  margin-top: 12px;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+.copy-message {
+  margin-top: 8px;
+  color: #00796b;
+  font-weight: bold;
 }
