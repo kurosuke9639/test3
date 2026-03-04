@@ -1,6 +1,4 @@
-// === 診断ロジック一式 ===
-
-// タイプ定義：象限ごとの文言
+// === タイプ定義 ===
 const typeDefinitions = {
   A: {
     name: "対面ドリブン・オフィス型",
@@ -44,10 +42,8 @@ const typeDefinitions = {
   },
 };
 
-// DOM が全部読まれてから動かす
+// ===== 初期化 =====
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("=== app.js loaded ===");
-
   const diagnosisForm = document.getElementById("diagnosis-form");
   const diagnosisButton = document.getElementById("diagnosis-button");
   const surveyForm = document.getElementById("survey-form");
@@ -62,14 +58,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const typeHints = document.getElementById("type-hints");
   const userPoint = document.getElementById("user-point");
 
-  if (!diagnosisForm || !diagnosisButton) {
-    console.error("診断フォームまたはボタンが見つかりません");
-    return;
-  }
+  if (!diagnosisForm || !diagnosisButton) return;
 
-  // 上の診断マップ
-  diagnosisButton.addEventListener("click", (event) => {
-    event.preventDefault();
+  // 上のマップの診断
+  diagnosisButton.addEventListener("click", (e) => {
+    e.preventDefault();
 
     const q1Value = getRadioValue("q1");
     const q2Value = getRadioValue("q2");
@@ -92,11 +85,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeDescription) typeDescription.textContent = typeInfo.description;
     if (typeHints) typeHints.textContent = typeInfo.hints;
 
-    if (userPoint) plotPoint(userPoint, x, y);
+    if (userPoint) plotPoint(userPoint, x, y); // 上の circle
     if (resultSection) resultSection.classList.remove("hidden");
   });
 
-  // 下の「結果をまとめる」用
+  // 下の「結果をまとめる」ボタンから呼ばれる関数を公開
   window.summarizeResult = function summarizeResult() {
     if (!surveyForm) {
       alert("アンケートフォームが見つかりません。");
@@ -105,7 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const q1Value = getRadioValue("q1");
     const q2Value = getRadioValue("q2");
-
     if (q1Value === null || q2Value === null) {
       alert("まず Q1 と Q2 に回答し、マップにプロットしてください。");
       return;
@@ -117,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(surveyForm);
     const answers = {};
 
-    // Q1, Q2 は数値からラベルに変換
+    // Q1, Q2
     answers.q1 = mapQ1Label(x);
     answers.q2 = mapQ2Label(y);
 
@@ -134,12 +126,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (v && v.trim() !== "") answers[name] = v.trim();
     });
 
-    // 下の四象限の点を、上と同じロジックでプロット
+    // ★ 下の四象限の点を、上と同じロジックで配置
     renderSummaryQuadrant(x, y);
 
-    // 回答一覧表示・コピー用テキスト生成
+    // 回答一覧 ＋ コピー用テキスト
     renderAnswerList(answers);
-
     const copyText = buildCopyText(answers);
     const copyBuffer = document.getElementById("copy-buffer");
     if (copyBuffer) copyBuffer.value = copyText;
@@ -159,17 +150,15 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 });
 
-// ===== 共通関数 =====
-
+// ===== 共通 =====
 function getRadioValue(name) {
   const nodes = document.querySelectorAll(`input[name="${name}"]`);
-  for (const node of nodes) {
-    if (node.checked) return node.value;
+  for (const n of nodes) {
+    if (n.checked) return n.value;
   }
   return null;
 }
 
-// タイプ判定：境界型を優先
 function judgeType(x, y) {
   if (x === 0 || y === 0) return "boundary";
   if (x > 0 && y > 0) return "A";
@@ -179,7 +168,7 @@ function judgeType(x, y) {
   return "boundary";
 }
 
-// SVG 上の座標変換（上と下で共通）
+// 上と下で共通の座標変換
 function plotPoint(pointElement, x, y) {
   const minVal = -2;
   const maxVal = 2;
@@ -187,17 +176,17 @@ function plotPoint(pointElement, x, y) {
   const svgMax = 200;
 
   const cx = mapRange(x, minVal, maxVal, svgMin, svgMax);
-  const cy = mapRange(-y, minVal, maxVal, svgMin, svgMax); // y は上下反転
+  const cy = mapRange(-y, minVal, maxVal, svgMin, svgMax); // 上下反転
 
   pointElement.setAttribute("cx", cx);
   pointElement.setAttribute("cy", cy);
 }
 
-function mapRange(value, inMin, inMax, outMin, outMax) {
-  return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+function mapRange(v, inMin, inMax, outMin, outMax) {
+  return ((v - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
 
-// Q1 ラベル
+// Q1/Q2 ラベル
 function mapQ1Label(x) {
   switch (x) {
     case -2:
@@ -215,7 +204,6 @@ function mapQ1Label(x) {
   }
 }
 
-// Q2 ラベル
 function mapQ2Label(y) {
   switch (y) {
     case -2:
@@ -233,14 +221,15 @@ function mapQ2Label(y) {
   }
 }
 
-// 下のサマリーマップの点だけ更新（SVG は index.html のまま）
+// ===== 下の四象限だけ弄るところ =====
 function renderSummaryQuadrant(x, y) {
   const point = document.getElementById("summary-user-point");
   if (!point) return;
+  // 上と同じ plotPoint をそのまま使う
   plotPoint(point, x, y);
 }
 
-// 回答一覧を画面に出す
+// 回答一覧
 function renderAnswerList(answers) {
   const answerList = document.getElementById("answer-list");
   if (!answerList) return;
@@ -273,7 +262,7 @@ function renderAnswerList(answers) {
   });
 }
 
-// 生成AIに投げる用テキスト
+// コピー用テキスト
 function buildCopyText(answers) {
   const questionText = {
     q1: "Q1. 仕事に最も集中しやすい場所はどちらですか？",
