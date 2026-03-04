@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>働き方スタイル診断</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- 必要ならここに CSS を読み込む -->
 </head>
 <body>
   <main>
@@ -41,19 +40,14 @@
 
       <p>あなたの座標：<span id="coord-display"></span></p>
 
-      <!-- 上の結果マップ（本番） -->
+      <!-- 上の結果マップ -->
       <svg id="result-map" viewBox="0 0 200 200" width="300" height="300">
-        <!-- 十字の軸 -->
         <line x1="0" y1="100" x2="200" y2="100" stroke="#333" stroke-width="1" />
         <line x1="100" y1="0" x2="100" y2="200" stroke="#333" stroke-width="1" />
-
-        <!-- ラベル（シンプル版。必要なら装飾は足してOK） -->
         <text x="5" y="15" font-size="10">自宅集中</text>
         <text x="140" y="15" font-size="10">オフィス集中</text>
         <text x="5" y="195" font-size="10">雑談・気軽なコミュニケーション</text>
         <text x="90" y="195" font-size="10">業務上の対面/評価・フィードバック</text>
-
-        <!-- ユーザポイント -->
         <circle id="user-point" cx="100" cy="100" r="4" fill="red" />
       </svg>
 
@@ -63,7 +57,7 @@
       <p id="type-hints"></p>
     </section>
 
-    <!-- アンケートフォーム（結果まとめ用） -->
+    <!-- アンケートフォーム -->
     <form id="survey-form">
       <section>
         <h2>Q3. 自宅またはオフィスでの集中を妨げる要因について教えてください。</h2>
@@ -127,7 +121,7 @@
     <section id="summary-section" class="hidden">
       <h2>回答結果のまとめ</h2>
 
-      <!-- 上と全く同じSVGを「コピーして使う」 -->
+      <!-- 下のまとめ用マップ（見た目はこのまま） -->
       <svg id="summary-map" viewBox="0 0 200 200" width="300" height="300">
         <line x1="0" y1="100" x2="200" y2="100" stroke="#333" stroke-width="1" />
         <line x1="100" y1="0" x2="100" y2="200" stroke="#333" stroke-width="1" />
